@@ -15,7 +15,9 @@ from implementation.tokenized_document import TokenizedDocument, TokenizedDocume
 
 log = logging.getLogger()
 
-punctuation_whitespacing_map = {ord(symbol): " " for symbol in string.punctuation + "«»—–“”•☆№\""}
+punctuation_whitespacing_map = {
+	ord(symbol): " "
+	for symbol in string.punctuation + string.whitespace + "«»—–“”•☆№\""}
 
 
 def main():
