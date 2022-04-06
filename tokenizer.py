@@ -15,7 +15,9 @@ from implementation.tokenized_document import TokenizedDocument, TokenizedDocume
 
 log = logging.getLogger()
 
-punctuation_whitespacing_map = {ord(symbol): " " for symbol in string.punctuation + "«»—–“”•☆№\""}
+punctuation_whitespacing_map = {
+	ord(symbol): " "
+	for symbol in string.punctuation + string.whitespace + "«»—–“”•☆№\""}
 
 
 def main():
@@ -49,11 +51,17 @@ def run():
 		if language_processor is None:
 			log.error("Не нашёл обработчик языка " + page_language)
 			continue
-		lemmas = [token.lemma_
-			for token in language_processor(page.text)
-			if not str.isspace(token.lemma_)]
 
-		document = TokenizedDocument(id_, page.url, page_language, lemmas)
+		processed_text = list(
+			token
+			for token in language_processor(page.text)
+			if token.is_alpha)
+		tokens = (token.text for token in processed_text if not token.is_stop)
+		lemmas = {}
+		for token in processed_text:
+			lemmas.setdefault(token.lemma_, []).append(token.text)
+
+		document = TokenizedDocument(id_, page.url, page_language, tokens, lemmas)
 		try:
 			tokenized_texts.create(document)
 		except Exception as exception:
