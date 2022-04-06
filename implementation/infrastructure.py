@@ -1,7 +1,6 @@
 import logging
 import os
 import traceback
-from pathlib import Path
 
 from tinydb import TinyDB
 
