@@ -19,13 +19,17 @@ class TokenizedDocument:
 class TokenizedDocumentRepository:
 	__file_encoding = "utf-8"
 	__token_separator = "\n"
+	__lemma_line_separator = "\n"
+	__lemma_separator = ":\t"
+	__lemma_tokens_separator = "\t"
 
 	def __init__(self, name = ""):
 		name = name if len(name) > 0 else "default"
 		repository_path = Path(name)
 		self.__documents_path = repository_path.joinpath("documents")
 
-		self.__documents_path.mkdir(parents = True, exist_ok = True)
+		self.__documents_path.joinpath("tokens").mkdir(parents = True, exist_ok = True)
+		self.__documents_path.joinpath("lemmas").mkdir(parents = True, exist_ok = True)
 		self.__table = get_tinydb_table(repository_path.joinpath("index.json"))
 		self.__check_and_correct_table()
 
@@ -41,12 +45,22 @@ class TokenizedDocumentRepository:
 		vars(document).update(document_properties)
 		document.id_ = id_
 
-		document_full_file_name = self.__get_document_full_file_name(id_)
 		with open(
-				document_full_file_name,
+				self.__get_token_full_file_name(id_),
 				"r",
 				encoding = TokenizedDocumentRepository.__file_encoding) as file:
 			document.tokens = file.read().split(TokenizedDocumentRepository.__token_separator)
+
+		with open(
+				self.__get_lemma_full_file_name(id_),
+				"r",
+				encoding = TokenizedDocumentRepository.__file_encoding) as file:
+			document.lemmas = {}
+			lemma_lines = file.read().split(TokenizedDocumentRepository.__lemma_line_separator)
+			for lemma_line in lemma_lines:
+				lemma, lemma_tokens_line = lemma_line.split(TokenizedDocumentRepository.__lemma_separator)
+				lemma_tokens = lemma_tokens_line.split(TokenizedDocumentRepository.__lemma_tokens_separator)
+				document.lemmas[lemma] = lemma_tokens
 
 		return document
 
@@ -61,25 +75,38 @@ class TokenizedDocumentRepository:
 		document_properties.pop("tokens")
 		self.__table.insert(table.Document(document_properties, doc_id = document.id_))
 
-		document_full_file_name = self.__get_document_full_file_name(document.id_)
 		with open(
-				document_full_file_name,
+				self.__get_token_full_file_name(document.id_),
 				"w",
 				encoding = TokenizedDocumentRepository.__file_encoding) as file:
 			file.write(TokenizedDocumentRepository.__token_separator.join(document.tokens))
+		with open(
+				self.__get_lemma_full_file_name(document.id_),
+				"w",
+				encoding = TokenizedDocumentRepository.__file_encoding) as file:
+			file.write(
+				TokenizedDocumentRepository.__lemma_line_separator.join(
+					f"{lemma}{self.__lemma_separator}"
+					+ self.__lemma_tokens_separator.join(tokens)
+					for lemma, tokens in document.lemmas.items()))
 
 	def delete_all(self):
 		for document in self.__table.all():
-			document_full_file_name = self.__get_document_full_file_name(document.doc_id)
-			Path(document_full_file_name).unlink(True)
+			Path(self.__get_token_full_file_name(document.doc_id)).unlink(True)
+			Path(self.__get_lemma_full_file_name(document.doc_id)).unlink(True)
 
 		self.__table.truncate()
 
-	def __get_document_full_file_name(self, id_):
-		return self.__documents_path.joinpath(f"{id_}.txt")
+	def __get_token_full_file_name(self, id_):
+		return self.__documents_path.joinpath(f"tokens/tokens_{id_}.txt")
+
+	def __get_lemma_full_file_name(self, id_):
+		return self.__documents_path.joinpath(f"lemmas/lemmas_{id_}.txt")
 
 	def __check_and_correct_table(self):
 		for id_ in self.get_all_ids():
-			document_full_file_name = self.__get_document_full_file_name(id_)
-			if not Path(document_full_file_name).is_file():
+			if not Path(self.__get_token_full_file_name(id_)).is_file():
+				self.__table.remove(doc_ids = [id_])
+				continue
+			if not Path(self.__get_lemma_full_file_name(id_)).is_file():
 				self.__table.remove(doc_ids = [id_])
