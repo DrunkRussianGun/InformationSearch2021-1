@@ -128,9 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Working directory
-work/
-
 ## Ignore JetBrains IDEs files
 
 # User-specific stuff
@@ -141,10 +138,11 @@ work/
 .idea/**/shelf
 
 # Generated files
-.idea/**/*.iml
 .idea/**/contentModel.xml
+.idea/**/vcs.xml
 
 # Sensitive or high-churn files
+.idea/**/dataSources.xml
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml
