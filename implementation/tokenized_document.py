@@ -8,11 +8,12 @@ tokenized_texts_repository_name = "tokenized_texts"
 
 
 class TokenizedDocument:
-	def __init__(self, id_, url, language_code, tokens):
+	def __init__(self, id_, url, language_code, tokens, lemmas):
 		self.id_ = id_
 		self.url = url
 		self.language_code = language_code
 		self.tokens = tokens
+		self.lemmas = lemmas
 
 
 class TokenizedDocumentRepository:
