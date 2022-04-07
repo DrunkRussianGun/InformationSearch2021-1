@@ -2,24 +2,18 @@ from math import *
 
 
 class TermsStatistics:
-	document_id_to_word_count_map: dict[int, dict[str, int]]
-	documents_words: set[str]
-
 	def __init__(self, document_id_to_word_count_map: dict[int, dict[str, int]]):
-		self.document_id_to_word_count_map = document_id_to_word_count_map
-		self.documents_words = set(
+		self.document_id_to_word_count_map: dict[int, dict[str, int]] = document_id_to_word_count_map
+		self.documents_words: set[str] = set(
 			word
 			for word_count_map in document_id_to_word_count_map.values()
 			for word in word_count_map.keys())
 
 
 class TfIdf:
-	idf: dict[str, float]
-	tf_idf: dict[int, dict[str, float]]
-
 	def __init__(self, idf: dict[str, float], tf_idf: dict[int, dict[str, float]]):
-		self.idf = idf
-		self.tf_idf = tf_idf
+		self.idf: dict[str, float] = idf
+		self.tf_idf: dict[int, dict[str, float]] = tf_idf
 
 
 class TfIdfCalculator:

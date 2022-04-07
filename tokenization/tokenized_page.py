@@ -2,12 +2,12 @@ from pathlib import Path
 
 from tinydb import table
 
-from implementation.infrastructure import get_tinydb_table
+from common.infrastructure import get_tinydb_table
 
-tokenized_texts_repository_name = "tokenized_texts"
+tokenized_pages_repository_name = "tokenized_pages"
 
 
-class TokenizedDocument:
+class TokenizedPage:
 	def __init__(self, id_, url, language_code, tokens, lemmas):
 		self.id_ = id_
 		self.url = url
@@ -16,7 +16,7 @@ class TokenizedDocument:
 		self.lemmas = lemmas
 
 
-class TokenizedDocumentRepository:
+class TokenizedPageRepository:
 	__file_encoding = "utf-8"
 	__token_separator = "\n"
 	__lemma_line_separator = "\n"
@@ -41,25 +41,25 @@ class TokenizedDocumentRepository:
 		if document_properties is None:
 			return None
 
-		document = object.__new__(TokenizedDocument)
+		document = object.__new__(TokenizedPage)
 		vars(document).update(document_properties)
 		document.id_ = id_
 
 		with open(
 				self.__get_token_full_file_name(id_),
 				"r",
-				encoding = TokenizedDocumentRepository.__file_encoding) as file:
-			document.tokens = file.read().split(TokenizedDocumentRepository.__token_separator)
+				encoding = TokenizedPageRepository.__file_encoding) as file:
+			document.tokens = file.read().split(TokenizedPageRepository.__token_separator)
 
 		with open(
 				self.__get_lemma_full_file_name(id_),
 				"r",
-				encoding = TokenizedDocumentRepository.__file_encoding) as file:
+				encoding = TokenizedPageRepository.__file_encoding) as file:
 			document.lemmas = {}
-			lemma_lines = file.read().split(TokenizedDocumentRepository.__lemma_line_separator)
+			lemma_lines = file.read().split(TokenizedPageRepository.__lemma_line_separator)
 			for lemma_line in lemma_lines:
-				lemma, lemma_tokens_line = lemma_line.split(TokenizedDocumentRepository.__lemma_separator)
-				lemma_tokens = lemma_tokens_line.split(TokenizedDocumentRepository.__lemma_tokens_separator)
+				lemma, lemma_tokens_line = lemma_line.split(TokenizedPageRepository.__lemma_separator)
+				lemma_tokens = lemma_tokens_line.split(TokenizedPageRepository.__lemma_tokens_separator)
 				document.lemmas[lemma] = lemma_tokens
 
 		return document
@@ -78,14 +78,14 @@ class TokenizedDocumentRepository:
 		with open(
 				self.__get_token_full_file_name(document.id_),
 				"w",
-				encoding = TokenizedDocumentRepository.__file_encoding) as file:
-			file.write(TokenizedDocumentRepository.__token_separator.join(document.tokens))
+				encoding = TokenizedPageRepository.__file_encoding) as file:
+			file.write(TokenizedPageRepository.__token_separator.join(document.tokens))
 		with open(
 				self.__get_lemma_full_file_name(document.id_),
 				"w",
-				encoding = TokenizedDocumentRepository.__file_encoding) as file:
+				encoding = TokenizedPageRepository.__file_encoding) as file:
 			file.write(
-				TokenizedDocumentRepository.__lemma_line_separator.join(
+				TokenizedPageRepository.__lemma_line_separator.join(
 					f"{lemma}{self.__lemma_separator}"
 					+ self.__lemma_tokens_separator.join(tokens)
 					for lemma, tokens in document.lemmas.items()))

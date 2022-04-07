@@ -1,9 +1,9 @@
 import logging
 import os
 
-from implementation.infrastructure import configure_logging, format_exception
-from implementation.inversed_index import InversedIndexRepository, inversed_index_repository_path
-from implementation.tokenized_document import TokenizedDocumentRepository, tokenized_texts_repository_name
+from common.infrastructure import configure_logging, format_exception
+from indexing.inversed_index import InversedIndexRepository, inversed_index_repository_path
+from tokenization.tokenized_page import TokenizedPageRepository, tokenized_pages_repository_name
 
 log = logging.getLogger()
 
@@ -16,14 +16,14 @@ def main():
 
 def run():
 	log.info("Инициализирую хранилище токенизированных текстов")
-	tokenized_texts = TokenizedDocumentRepository(tokenized_texts_repository_name)
+	tokenized_pages_repository = TokenizedPageRepository(tokenized_pages_repository_name)
 
 	log.info("Инициализирую хранилище инвертированного индекса")
 	inverted_index_repository = InversedIndexRepository(inversed_index_repository_path)
 
 	index = {}
-	for document_id in tokenized_texts.get_all_ids():
-		tokenized_document = tokenized_texts.get(document_id)
+	for document_id in tokenized_pages_repository.get_all_ids():
+		tokenized_document = tokenized_pages_repository.get(document_id)
 		log.info(f"Обрабатываю страницу {tokenized_document.url} ({len(tokenized_document.lemmas)} токенов)")
 
 		for lemma, _ in tokenized_document.lemmas.items():

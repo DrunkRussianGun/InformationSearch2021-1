@@ -8,9 +8,9 @@ import requests
 import validators
 from bs4 import BeautifulSoup
 
-from implementation.common import delete_extra_whitespaces
-from implementation.infrastructure import configure_logging, format_exception
-from implementation.raw_document import RawDocument, RawDocumentRepository, raw_texts_repository_name
+from common.common import delete_extra_whitespaces
+from common.infrastructure import configure_logging, format_exception
+from crawling.raw_document import RawDocument, RawDocumentRepository, raw_texts_repository_name
 
 log = logging.getLogger()
 
