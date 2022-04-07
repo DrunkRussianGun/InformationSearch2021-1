@@ -1,4 +1,5 @@
 import re as regex
+from typing import Iterable
 
 
 def delete_extra_whitespaces(text):
@@ -12,3 +13,15 @@ def delete_extra_whitespaces(text):
 	text = regex.sub("\\s*\\n\\s*", "\n", text)
 
 	return text
+
+
+def count_duplicates(elements: Iterable[str]) -> dict[str, int]:
+	counts: dict[str, int] = {}
+	for element in elements:
+		counts.setdefault(element, 0)
+		counts[element] += 1
+	return counts
+
+
+def scalar_product(vector1: list[float], vector2: list[float]) -> float:
+	return sum(map(lambda first, second: first * second, vector1, vector2))

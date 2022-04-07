@@ -1,5 +1,4 @@
-from typing import *
-
+from common.common import *
 from common.infrastructure import *
 from tfidf.tf_idf_repository import *
 from tokenization.tokenized_page import *
@@ -50,14 +49,6 @@ def run():
 	lemmas_tf_idf: TfIdf = tf_idf_calculator.calculate(
 		TermsStatistics(document_id_to_lemma_count_map))
 	lemmas_tf_idf_repository.create(lemmas_tf_idf)
-
-
-def count_duplicates(elements: Generator[str, None, None]) -> dict[str, int]:
-	counts: dict[str, int] = {}
-	for element in elements:
-		counts.setdefault(element, 0)
-		counts[element] += 1
-	return counts
 
 
 if __name__ == '__main__':
