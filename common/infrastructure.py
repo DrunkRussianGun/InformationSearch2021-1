@@ -5,6 +5,8 @@ import traceback
 from tinydb import TinyDB
 
 database_file_name = "database.json"
+log_file_name = "log"
+log_file_encoding = "utf-8"
 
 
 class Singleton(type):
@@ -25,6 +27,11 @@ def configure_logging():
 	console_handler.setFormatter(log_formatter)
 	console_handler.setLevel(logging.INFO)
 	root_logger.addHandler(console_handler)
+
+	file_handler = logging.FileHandler(log_file_name, encoding = log_file_encoding)
+	file_handler.setFormatter(log_formatter)
+	file_handler.setLevel(logging.DEBUG)
+	root_logger.addHandler(file_handler)
 
 
 def format_exception(exception):
