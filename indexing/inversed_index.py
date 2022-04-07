@@ -1,6 +1,6 @@
 from tinydb import table
 
-from implementation.infrastructure import get_tinydb_table
+from common.infrastructure import get_tinydb_table
 
 inversed_index_repository_path = "inversed_index"
 

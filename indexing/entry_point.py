@@ -1,9 +1,9 @@
 import logging
 import os
 
-from implementation.infrastructure import configure_logging, format_exception
-from implementation.inversed_index import InversedIndexRepository, inversed_index_repository_path
-from implementation.tokenized_document import TokenizedDocumentRepository, tokenized_texts_repository_name
+from common.infrastructure import configure_logging, format_exception
+from indexing.inversed_index import InversedIndexRepository, inversed_index_repository_path
+from tokenization.tokenized_document import TokenizedDocumentRepository, tokenized_texts_repository_name
 
 log = logging.getLogger()
 

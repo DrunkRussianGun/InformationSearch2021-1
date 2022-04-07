@@ -2,7 +2,7 @@ from pathlib import Path
 
 from tinydb import table
 
-from implementation.infrastructure import get_tinydb_table
+from common.infrastructure import get_tinydb_table
 
 tokenized_texts_repository_name = "tokenized_texts"
 

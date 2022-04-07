@@ -4,11 +4,11 @@ from typing import *
 from alphabet_detector import *
 from spacy import *
 
-from implementation.common import *
-from implementation.boolean_search import *
-from implementation.infrastructure import *
-from implementation.inversed_index import *
-from implementation.raw_document import *
+from booleansearch.boolean_search import *
+from common.common import *
+from common.infrastructure import *
+from crawling.raw_document import *
+from indexing.inversed_index import *
 
 log = logging.getLogger()
 

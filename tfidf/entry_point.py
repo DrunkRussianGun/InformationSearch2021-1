@@ -1,6 +1,6 @@
-from implementation.infrastructure import *
-from implementation.tokenized_document import *
+from common.infrastructure import *
 from tfidf.tf_idf_repository import *
+from tokenization.tokenized_document import *
 
 log = logging.getLogger()
 

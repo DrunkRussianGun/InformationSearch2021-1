@@ -7,10 +7,10 @@ import spacy
 from spacy import Language
 from spacy_langdetect import LanguageDetector
 
-from implementation.common import get_language_processor
-from implementation.infrastructure import configure_logging, format_exception
-from implementation.raw_document import RawDocumentRepository, raw_texts_repository_name
-from implementation.tokenized_document import TokenizedDocument, TokenizedDocumentRepository, \
+from common.common import get_language_processor
+from common.infrastructure import configure_logging, format_exception
+from crawling.raw_document import RawDocumentRepository, raw_texts_repository_name
+from tokenization.tokenized_document import TokenizedDocument, TokenizedDocumentRepository, \
 	tokenized_texts_repository_name
 
 log = logging.getLogger()
