@@ -1,10 +1,14 @@
-from alphabet_detector import *
+import logging
+from typing import Union
 
-from common.infrastructure import *
-from crawling.raw_document import *
-from tfidf.tf_idf_repository import *
-from tokenization.tokenizer import *
-from vectorsearch.vector_search import *
+from alphabet_detector import AlphabetDetector
+
+from common.infrastructure import configure_logging
+from crawling.raw_document import RawDocumentRepository, raw_texts_repository_name
+from tfidf.tf_idf import TfIdf, TfIdfCalculator
+from tfidf.tf_idf_repository import TfIdfRepository, lemmas_tf_idf_repository_name
+from tokenization.tokenizer import TokenizedDocument, Tokenizer
+from vectorsearch.vector_search import VectorSearch
 
 log = logging.getLogger()
 

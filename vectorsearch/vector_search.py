@@ -1,7 +1,8 @@
-from itertools import *
+from math import sqrt
+from typing import Iterable, Tuple
 
-from common.common import *
-from tfidf.tf_idf import *
+from common.common import count_duplicates, scalar_product
+from tfidf.tf_idf import TermsStatistics, TfIdf, TfIdfCalculator
 
 
 class VectorSearch:

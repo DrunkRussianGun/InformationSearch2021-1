@@ -1,5 +1,5 @@
-from math import *
-from typing import *
+from math import log
+from typing import Optional
 
 
 class TermsStatistics:

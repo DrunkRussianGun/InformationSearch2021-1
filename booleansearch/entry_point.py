@@ -1,12 +1,15 @@
-from re import *
+import logging
+import re as regex
+from re import Match
+from typing import Any, Iterator, Optional, Union
 
-from alphabet_detector import *
+from alphabet_detector import AlphabetDetector
 
-from booleansearch.boolean_search import *
-from common.infrastructure import *
-from crawling.raw_document import *
-from indexing.inversed_index import *
-from tokenization.tokenizer import *
+from booleansearch.boolean_search import BooleanSearch
+from common.infrastructure import configure_logging
+from crawling.raw_document import RawDocumentRepository, raw_texts_repository_name
+from indexing.inversed_index import InversedIndexRepository, inversed_index_repository_path
+from tokenization.tokenizer import TokenizedDocument, Tokenizer
 
 log = logging.getLogger()
 
@@ -36,7 +39,7 @@ def run() -> None:
 
 	alphabet_detector: AlphabetDetector = AlphabetDetector()
 	tokenizer: Tokenizer = Tokenizer()
-	operators_regex: Pattern = compile("[&|]")
+	operators_regex: regex.Pattern = regex.compile("[&|]")
 
 	while True:
 		query: str = input("Введите поисковый запрос: ")
