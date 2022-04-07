@@ -1,3 +1,4 @@
+from os import walk
 from shutil import *
 from pathlib import *
 
@@ -35,9 +36,30 @@ class TfIdfRepository:
 				file.write(
 					TfIdfRepository.__tf_idf_separator.join(
 						f"{word}{TfIdfRepository.__field_separator}"
-						f"{tf_idf.idf[word]:.6f}{TfIdfRepository.__field_separator}"
-						f"{tf_idf_value:.6f}"
+						f"{tf_idf.idf[word]:.12f}{TfIdfRepository.__field_separator}"
+						f"{tf_idf_value:.12f}"
 						for word, tf_idf_value in document_tf_idf.items()))
+
+	def get(self) -> TfIdf:
+		idf: dict[str, float] = {}
+		tf_idf: dict[int, dict[str, float]] = {}
+
+		for file_name in next(walk(self.__documents_path), (None, None, []))[2]:
+			document_id: int = self.__get_document_id(file_name)
+			document_tf_idf: dict[str, float] = {}
+			tf_idf[document_id] = document_tf_idf
+
+			with open(
+					self.__get_document_full_file_name(document_id),
+					"r",
+					encoding = TfIdfRepository.__file_encoding) as file:
+				tf_idf_lines: list[str] = file.read().split(TfIdfRepository.__tf_idf_separator)
+				for tf_idf_line in tf_idf_lines:
+					word, idf_value, tf_idf_value = tf_idf_line.split(TfIdfRepository.__field_separator)
+					idf.setdefault(word, float(idf_value))
+					document_tf_idf[word] = float(tf_idf_value)
+
+		return TfIdf(idf, tf_idf)
 
 	def delete_all(self):
 		rmtree(self.__documents_path, True)
@@ -45,3 +67,6 @@ class TfIdfRepository:
 
 	def __get_document_full_file_name(self, document_id: int):
 		return self.__documents_path.joinpath(f"{document_id}.txt")
+
+	def __get_document_id(self, document_file_name: str) -> int:
+		return int(document_file_name[:len(document_file_name) - len(".txt")])
