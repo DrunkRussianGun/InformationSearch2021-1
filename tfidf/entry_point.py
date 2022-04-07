@@ -1,3 +1,5 @@
+from typing import *
+
 from common.infrastructure import *
 from tfidf.tf_idf_repository import *
 from tokenization.tokenized_page import *
@@ -30,7 +32,10 @@ def run():
 
 	log.info("Рассчитываю TF–IDF токенов")
 	document_id_to_token_count_map: dict[int, dict[str, int]] = {
-		document_id: count_duplicates(documents[document_id].tokens)
+		document_id: count_duplicates(
+			token
+			for tokens in documents[document_id].lemmas.values()
+			for token in tokens)
 		for document_id in document_ids}
 	tokens_tf_idf: TfIdf = tf_idf_calculator.calculate(
 		TermsStatistics(document_id_to_token_count_map))
@@ -47,7 +52,7 @@ def run():
 	lemmas_tf_idf_repository.create(lemmas_tf_idf)
 
 
-def count_duplicates(elements: list[str]) -> dict[str, int]:
+def count_duplicates(elements: Generator[str, None, None]) -> dict[str, int]:
 	counts: dict[str, int] = {}
 	for element in elements:
 		counts.setdefault(element, 0)
