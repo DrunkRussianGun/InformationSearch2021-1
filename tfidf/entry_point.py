@@ -1,6 +1,6 @@
 from common.infrastructure import *
 from tfidf.tf_idf_repository import *
-from tokenization.tokenized_document import *
+from tokenization.tokenized_page import *
 
 log = logging.getLogger()
 
@@ -13,11 +13,11 @@ def main():
 
 def run():
 	log.info("Загружаю токенизированные тексты")
-	tokenized_texts_repository: TokenizedDocumentRepository = TokenizedDocumentRepository(
-		tokenized_texts_repository_name)
-	document_ids: list[int] = tokenized_texts_repository.get_all_ids()
-	documents: dict[int, TokenizedDocument] = {
-		document_id: tokenized_texts_repository.get(document_id)
+	tokenized_pages_repository: TokenizedPageRepository = TokenizedPageRepository(
+		tokenized_pages_repository_name)
+	document_ids: list[int] = tokenized_pages_repository.get_all_ids()
+	documents: dict[int, TokenizedPage] = {
+		document_id: tokenized_pages_repository.get(document_id)
 		for document_id in document_ids}
 
 	log.info("Инициализирую хранилище TF–IDF")

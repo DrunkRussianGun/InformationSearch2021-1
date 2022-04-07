@@ -1,14 +1,12 @@
 from re import *
-from typing import *
 
 from alphabet_detector import *
-from spacy import *
 
 from booleansearch.boolean_search import *
-from common.common import *
 from common.infrastructure import *
 from crawling.raw_document import *
 from indexing.inversed_index import *
+from tokenization.tokenizer import *
 
 log = logging.getLogger()
 
@@ -37,6 +35,7 @@ def run() -> None:
 		return
 
 	alphabet_detector: AlphabetDetector = AlphabetDetector()
+	tokenizer: Tokenizer = Tokenizer()
 	operators_regex: Pattern = compile("[&|]")
 
 	while True:
@@ -58,7 +57,7 @@ def run() -> None:
 			if is_operand_negated:
 				operand = operand[1:]
 
-			operand_lemma: Optional[str] = get_lemma(alphabet_detector, operand)
+			operand_lemma: Optional[str] = get_lemma(alphabet_detector, tokenizer, operand)
 			if operand_lemma is None:
 				continue
 
@@ -82,11 +81,13 @@ def run() -> None:
 		print()
 
 
-def get_lemma(alphabet_detector: AlphabetDetector, operand: str) -> Optional[str]:
-	language_code: str = "ru" if "CYRILLIC" in alphabet_detector.detect_alphabet(operand) else "en"
+def get_lemma(alphabet_detector: AlphabetDetector, tokenizer: Tokenizer, operand: str) -> Optional[str]:
+	language: str = "ru" if "CYRILLIC" in alphabet_detector.detect_alphabet(operand) else "en"
+	document_result: Union[TokenizedDocument, str] = tokenizer.tokenize(operand, language, False)
+	if not isinstance(document_result, TokenizedDocument):
+		log.error(f"Не смог проанализировать слово {operand}. " + document_result)
 
-	language_processor: Optional[Language] = get_language_processor(language_code)
-	lemmas: list[str] = [token.lemma_ for token in language_processor(operand)]
+	lemmas: list[str] = list(document_result.lemmas.keys())
 	if len(lemmas) != 1:
 		log.error(f"Ожидал единственное слово, получил {lemmas}")
 
