@@ -1,6 +1,6 @@
 from implementation.infrastructure import *
 from implementation.tokenized_document import *
-from tfidf.tf_idf import *
+from tfidf.tf_idf_repository import *
 
 log = logging.getLogger()
 
@@ -20,6 +20,12 @@ def run():
 		document_id: tokenized_texts_repository.get(document_id)
 		for document_id in document_ids}
 
+	log.info("Инициализирую хранилище TF–IDF")
+	tokens_tf_idf_repository = TfIdfRepository(tokens_tf_idf_repository_name)
+	tokens_tf_idf_repository.delete_all()
+	lemmas_tf_idf_repository = TfIdfRepository(lemmas_tf_idf_repository_name)
+	lemmas_tf_idf_repository.delete_all()
+
 	tf_idf_calculator = TfIdfCalculator()
 
 	log.info("Рассчитываю TF–IDF токенов")
@@ -28,6 +34,7 @@ def run():
 		for document_id in document_ids}
 	tokens_tf_idf: TfIdf = tf_idf_calculator.calculate(
 		TermsStatistics(document_id_to_token_count_map))
+	tokens_tf_idf_repository.create(tokens_tf_idf)
 
 	log.info("Рассчитываю TF–IDF лемм")
 	document_id_to_lemma_count_map: dict[int, dict[str, int]] = {
@@ -37,6 +44,7 @@ def run():
 		for document_id in document_ids}
 	lemmas_tf_idf: TfIdf = tf_idf_calculator.calculate(
 		TermsStatistics(document_id_to_lemma_count_map))
+	lemmas_tf_idf_repository.create(lemmas_tf_idf)
 
 
 def count_duplicates(elements: list[str]) -> dict[str, int]:
