@@ -1,13 +1,15 @@
 from math import *
+from typing import *
 
 
 class TermsStatistics:
 	def __init__(self, document_id_to_word_count_map: dict[int, dict[str, int]]):
 		self.document_id_to_word_count_map: dict[int, dict[str, int]] = document_id_to_word_count_map
-		self.documents_words: set[str] = set(
-			word
-			for word_count_map in document_id_to_word_count_map.values()
-			for word in word_count_map.keys())
+		self.corpus_words: list[str] = list(
+			set(
+				word
+				for word_count_map in document_id_to_word_count_map.values()
+				for word in word_count_map.keys()))
 
 
 class TfIdf:
@@ -17,16 +19,17 @@ class TfIdf:
 
 
 class TfIdfCalculator:
-	def calculate(self, terms: TermsStatistics) -> TfIdf:
-		documents_count: int = len(terms.document_id_to_word_count_map.keys())
-		idf: dict[str, float] = {
-			word: log(
-				float(documents_count)
-				/ sum(
-					1
-					for word_count_map in terms.document_id_to_word_count_map.values()
-					if word in word_count_map))
-			for word in terms.documents_words}
+	def calculate(self, terms: TermsStatistics, idf: Optional[dict[str, float]] = None) -> TfIdf:
+		if idf is None:
+			documents_count: int = len(terms.document_id_to_word_count_map.keys())
+			idf = {
+				word: log(
+					float(documents_count)
+					/ sum(
+						1
+						for word_count_map in terms.document_id_to_word_count_map.values()
+						if word in word_count_map))
+				for word in terms.corpus_words}
 
 		tf: dict[int, dict[str, float]] = {}
 		tf_idf: dict[int, dict[str, float]] = {}
@@ -38,7 +41,7 @@ class TfIdfCalculator:
 				word: float(count) / document_words_count
 				for word, count in word_count_map.items()}
 			tf_idf[document_id] = {
-				word: tf_value * idf[word]
+				word: tf_value * idf.get(word, 0)
 				for word, tf_value in tf[document_id].items()}
 
 		return TfIdf(idf, tf_idf)
