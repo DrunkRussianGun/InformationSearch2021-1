@@ -1,6 +1,7 @@
 requests==2.25.1
 validators==0.18.2
 beautifulsoup4==4.9.3
+alphabet-detector==0.0.7
 spacy==3.0.5
 spacy_langdetect==0.1.2
 en-core-web-md @ https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.0.0/en_core_web_md-3.0.0-py3-none-any.whl
