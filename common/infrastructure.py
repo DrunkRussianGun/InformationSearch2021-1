@@ -9,15 +9,6 @@ log_file_name = "log"
 log_file_encoding = "utf-8"
 
 
-class Singleton(type):
-	_instances = {}
-
-	def __call__(cls, *args, **kwargs):
-		if cls not in cls._instances:
-			cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-		return cls._instances[cls]
-
-
 def configure_logging():
 	log_formatter = logging.Formatter("%(asctime)s %(levelname)s [%(name)s] %(message)s")
 	root_logger = logging.getLogger()

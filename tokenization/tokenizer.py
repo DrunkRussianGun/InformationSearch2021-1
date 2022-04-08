@@ -1,12 +1,13 @@
 import re
 import string
-from typing import *
+from typing import Optional, Type, Union
 
 import en_core_web_md
 import ru_core_news_md
-from spacy import *
-from spacy.tokens import *
-from spacy_langdetect import *
+import spacy
+from spacy import Language
+from spacy.tokens import Token
+from spacy_langdetect import LanguageDetector
 
 
 class TokenizedDocument:
@@ -85,7 +86,7 @@ class Tokenizer:
 		def create_language_detector(nlp, name):
 			return LanguageDetector()
 
-		language_detector = blank("en")
+		language_detector = spacy.blank("en")
 		language_detector.add_pipe("sentencizer")
 		language_detector.add_pipe("language_detector")
 		return language_detector

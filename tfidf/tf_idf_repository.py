@@ -1,8 +1,8 @@
 from os import walk
-from shutil import *
-from pathlib import *
+from pathlib import Path
+from shutil import rmtree
 
-from tfidf.tf_idf import *
+from tfidf.tf_idf import TfIdf
 
 tokens_tf_idf_repository_name: str = "tf-idf/tokens"
 lemmas_tf_idf_repository_name: str = "tf-idf/lemmas"

@@ -1,7 +1,12 @@
-from common.common import *
-from common.infrastructure import *
-from tfidf.tf_idf_repository import *
-from tokenization.tokenized_page import *
+import logging
+
+from common.common import count_duplicates
+from common.infrastructure import configure_logging
+from tfidf.tf_idf import TermsStatistics, TfIdf, TfIdfCalculator
+from tfidf.tf_idf_repository import TfIdfRepository, lemmas_tf_idf_repository_name, \
+	tokens_tf_idf_repository_name
+from tokenization.tokenized_page import TokenizedPage, TokenizedPageRepository, \
+	tokenized_pages_repository_name
 
 log = logging.getLogger()
 
